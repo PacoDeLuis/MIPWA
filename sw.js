@@ -8,11 +8,12 @@ const urlsToCache = [
   "icons/icon-512x512.png"
 ];
 
+// 2. INSTALL -> se ejecuta al instalar el Service Worker
 self.addEventListener("install", event =>{
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache=> cache.assAll(urlsToCache))
-    );
+    );
 });
 
 // 3. ACTIVATE -> limpia cachés antiguas
