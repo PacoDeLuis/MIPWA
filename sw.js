@@ -9,11 +9,12 @@ const urlsToCache = [
 ];
 
 // 2. INSTALL -> se ejecuta al instalar el Service Worker
-self.addEventListener("install", event =>{
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache=> cache.assAll(urlsToCache))
-    );
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache)) // <- CORRECCIÓN AQUÍ
+      .catch(err => console.error("Error al cachear archivos:", err))
+  );
 });
 
 // 3. ACTIVATE -> limpia cachés antiguas
@@ -23,7 +24,7 @@ self.addEventListener("activate", event => {
     caches.keys().then(keys =>
       Promise.all(
         keys.filter(key => !cacheWhitelist.includes(key))
-             .map(key => caches.delete(key))
+            .map(key => caches.delete(key))
       )
     )
   );
