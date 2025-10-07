@@ -12,7 +12,7 @@ const urlsToCache = [
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache)) // <- CORRECCIÓN AQUÍ
+      .then(cache => cache.assAll(urlsToCache)) // <- CORRECCIÓN AQUÍ
       .catch(err => console.error("Error al cachear archivos:", err))
   );
 });
