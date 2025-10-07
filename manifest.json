@@ -1,8 +1,7 @@
 {
     "name": "Mi PWA de ejemplo",
     "short_name": "MIPWA",
-    "start_url": "/MIPWA/index.html",
-    "scope": "/MIPWA/",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#0000ff",
