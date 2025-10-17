@@ -1,27 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi primera PWA</title>
-    <!-- Vincular el manifest -->
-    <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi PWA con Login Offline</title>
 
-    <!-- Definir color de la barra de navegación en móviles -->
-     <meta name"theme-color" content="#ff0000">
+  <!-- Vincular el manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Definir color de la barra en móviles -->
+  <meta name="theme-color" content="#ff0000">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #fafafa;
+      padding: 30px;
+    }
+    input, button {
+      margin: 10px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    #mainContent {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>Bienvenido a mi PWA</h1>
-    <p>Se puede instalar como aplicación en tu celular</p>
-    <button onclick="alert('Hola desde la PWA')"> Click aqui</button>
-    <script>
-        if ("serviceWorker" in navigator){
-            navigator.serviceWorker
-            .register("/MIPWA/sw.js")
-            .then(()=> console.log("Servidor Worker Registrado"))
-            .catch(err => console.log("Error al registrar el SW", err))
-        }
-    </script>
-    
+  <h1>Bienvenido a mi PWA</h1>
+
+  <!-- Sección de login -->
+  <div id="loginContainer">
+    <h2>Iniciar sesión</h2>
+    <form id="loginForm">
+      <input type="text" id="user" placeholder="Usuario" required><br>
+      <input type="password" id="pass" placeholder="Contraseña" required><br>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <!-- Sección que aparece al iniciar sesión -->
+  <div id="mainContent">
+    <h2>Bienvenido, <span id="username"></span></h2>
+    <p>Puedes usar esta app incluso sin conexión.</p>
+    <button onclick="alert('Hola desde la PWA')">Click aquí</button><br>
+    <button id="logout">Cerrar sesión</button>
+  </div>
+
+  <script>
+    // Verificar si hay sesión guardada
+    if (localStorage.getItem("usuario")) {
+      document.getElementById("loginContainer").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+      document.getElementById("username").textContent = localStorage.getItem("usuario");
+    }
+
+    // Login local (sin servidor)
+    document.getElementById("loginForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const user = document.getElementById("user").value;
+      const pass = document.getElementById("pass").value;
+
+      if (user === "admin" && pass === "1234") {
+        localStorage.setItem("usuario", user);
+        location.reload();
+      } else {
+        alert("Usuario o contraseña incorrectos");
+      }
+    });
+
+    // Cerrar sesión
+    document.getElementById("logout").addEventListener("click", () => {
+      localStorage.removeItem("usuario");
+      location.reload();
+    });
+
+    // Registrar el Service Worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("sw.js") // ✅ Ruta corregida: ya no lleva "/MIPWA/"
+        .then(() => console.log("Service Worker registrado correctamente"))
+        .catch(err => console.error("Error al registrar el SW:", err));
+    }
+  </script>
 </body>
 </html>

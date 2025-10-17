@@ -1,4 +1,4 @@
-// 1. Nombre del caché y archivos a cachear
+// 1. Nombre del caché y archivos a cachear 
 const CACHE_NAME = "Mi-cache-v1";
 const urlsToCache = [
   "index.html",
@@ -12,7 +12,7 @@ const urlsToCache = [
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.assAll(urlsToCache)) 
+      .then(cache => cache.addAll(urlsToCache))
       .catch(err => console.error("Error al cachear archivos:", err))
   );
 });
@@ -34,7 +34,15 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(response => {
-      return response || fetch(event.request).catch(() => caches.match("./offline.html"));
+      return response || fetch(event.request).catch(() => caches.match("offline.html"));
     })
+  );
+});
+
+// 5. PUSH -> Notificaciones (opcional)
+self.addEventListener("push", event =>{
+  const data = event.data ? event.data.text() : "Notificación sin texto";
+  event.waitUntil(
+    self.registration.showNotification("Mi PWA", { body: data })
   );
 });
